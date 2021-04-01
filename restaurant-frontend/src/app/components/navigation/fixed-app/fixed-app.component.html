@@ -1,0 +1,13 @@
+<app-header [showSideNav]="showSideNav"></app-header>
+<mat-drawer-container>
+  <mat-drawer *ngIf="showSideNav" mode="side" opened>
+    <mat-nav-list>
+      <app-sidenav-list *ngFor="let item of navItems" [item]="item"></app-sidenav-list>
+    </mat-nav-list>
+  </mat-drawer>
+  <mat-drawer-content #matDrawerContent>
+    <div class="container">
+      <router-outlet *ngIf="media.isActive('gt-sm')"></router-outlet>
+    </div>
+  </mat-drawer-content>
+</mat-drawer-container>

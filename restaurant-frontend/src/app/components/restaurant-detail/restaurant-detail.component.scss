@@ -1,0 +1,21 @@
+.banner-image {
+  ////object-fit: none;
+  object-position: 50% 50%; /* default value: image is centered*/
+  object-position: 0 0; /* positioned top left of the content box */
+
+  height: 300px;
+  width: auto;
+  color: white;
+
+  h1 {
+    font-size: xx-large;
+    font-family: Roboto;
+    font-weight: 700;
+  }
+}
+
+.action-item {
+  * {
+    color: white;
+  }
+}

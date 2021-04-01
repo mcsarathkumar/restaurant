@@ -1,0 +1,72 @@
+<div class="my-3 w-100 mx-3 mx-lg-0" fxLayout="row" fxFlexFill>
+  <mat-form-field appearance="standard" fxFlex="15" fxFlex.lt-md="25">
+    <mat-label>Location</mat-label>
+    <mat-select [(ngModel)]="location" name="location" (ngModelChange)="changeLocationFn()">
+      <mat-option value="All">All</mat-option>
+      <mat-option *ngFor="let item of cityList" [value]="item">
+        {{ item }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field class="" appearance="standard" fxFlex="*" fxFlex.lt-md="*">
+    <input matInput [(ngModel)]="filterValue" type="text" name="restaurant_name" (keyup)="filterRestaurantFn()">
+  </mat-form-field>
+</div>
+
+
+
+
+  <div class="my-2" fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="1rem" fxLayoutAlign.lt-sm="center stretch">
+    <button *ngFor="let option of restaurantFilterOptions; let i = index" mat-flat-button
+            [color]="activeFilter === i ? 'primary' : ''" [ngClass]="activeFilter === i ? 'text-light' : 'text-dark'"
+            (click)="activeFilter=i;restaurantList.reverse()">{{option.buttonDisplay}}</button>
+    <mat-form-field appearance="standard">
+      <mat-label>Rating</mat-label>
+      <mat-select [(ngModel)]="ratingFilter" name="location" (ngModelChange)="ratingFilterFn()">
+        <mat-option value="All">All</mat-option>
+        <mat-option *ngFor="let item of filterOptions" [value]="item.value">
+          {{ item.description }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+<ng-container *ngIf="restaurantList.length > 0">
+  <mat-card *ngFor="let i of restaurantList" class="my-3 mat-elevation-z8" ngClass.lt-md="mx-3">
+    <mat-card-content>
+      <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="25px" fxLayoutGap.lt-sm="0px"
+           fxLayoutAlign="start stretch">
+        <div fxLayout="row" fxLayoutAlign="center center" fxLayoutAlign.lt-sm="center center" class="img-block"
+             ngClass.lt-sm="img-block-lt-sm">
+          <img [src]="i.thumbnail_image">
+        </div>
+        <div fxFlex>
+          <div fxLayoutAlign.lt-sm="center stretch">
+            <h2 class="mb-0" [ngClass.lt-sm]="'mt-2'">{{i.name}}</h2>
+          </div>
+          <div *ngIf="i.user_rating > 0" fxLayout="row" class="pt-2" fxLayoutAlign="start center">
+            <div fxLayout="column" class="mr-2 rating-badge">{{i.user_rating}}</div>
+            <app-star-rating class="mt-1" [rating]="i.user_rating"></app-star-rating>
+          </div>
+          <div *ngIf="i.user_rating === 0" fxLayout="row" class="pt-1 pb-1">
+            <div>No Rating Available</div>
+          </div>
+          <div fxLayout="row" class="pt-1">
+            <mat-icon class="mr-2 text-lightgray">directions</mat-icon>
+            <div class="text-truncate">{{i.address1}}, {{i.address2}}, {{i.city}}</div>
+          </div>
+          <div fxLayout="row" class="pt-1">
+            <mat-icon class="mr-2 text-lightgray">phone</mat-icon>
+            <div><a class="text-dark no-decoration" [href]="'tel:'+i.phone">{{i.phone}}</a></div>
+          </div>
+        </div>
+        <div fxLayout="column" fxLayoutAlign="center center" class="mr-0 mr-md-3">
+          <button mat-stroked-button color="primary" (click)="router.navigate(['restaurant', i.id])">Read more</button>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</ng-container>
+<h1 *ngIf="restaurantList.length === 0">
+  No restaurants found
+</h1>
+<div class="py-0 py-md-5"></div>

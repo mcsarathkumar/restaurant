@@ -1,0 +1,185 @@
+@import "../node_modules/bootstrap/dist/css/bootstrap-grid.min.css";
+// Custom Theming for Angular Material
+// For more information: https://material.angular.io/guide/theming
+@import '~@angular/material/theming';
+// Plus imports for other components in your app.
+
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+@include mat-core();
+
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue. Available color palettes: https://material.io/design/color/
+$restaurant-primary: mat-palette($mat-green);
+$restaurant-accent: mat-palette($mat-blue-gray, A200, A100, A400);
+
+// The warn palette is optional (defaults to red).
+$restaurant-warn: mat-palette($mat-red);
+
+// Create the theme object. A theme consists of configurations for individual
+// theming systems such as "color" or "typography".
+$restaurant-theme: mat-light-theme((
+  color: (
+    primary: $restaurant-primary,
+    accent: $restaurant-accent,
+    warn: $restaurant-warn,
+  )
+));
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include angular-material-theme($restaurant-theme);
+
+/* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+// home component
+
+@import './app/shared-scss/breakpoints';
+
+.mat-sidenav {
+  width: 360px;
+}
+.mat-sidenav-container {
+  background-color: white !important;
+  height: 100vh;
+}
+.sidenav-toolbar {
+  height: 64px;
+  background-color: mat-color($restaurant-primary);
+  display: flex;
+  flex-direction: row;
+
+  @media (max-width: 600px) {
+    height: 56px;
+  }
+}
+.mat-nav-list {
+  padding-top: 0;
+}
+@include breakpoint-max(600px) {
+  .fixed-topnav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    width: 100% !important;
+  }
+
+  .mat-drawer-container {
+    //margin-top: 56px;
+  }
+}
+
+
+// side nav
+
+app-sidenav-list:host {
+  outline: none;
+  .mat-list-item.active {
+    background-color: mat-color($restaurant-primary, 50);
+  }
+  &:hover,
+  &:focus {
+    >.mat-list-item:not(.expanded) {
+      background-color: mat-color($restaurant-primary, 100) !important;
+    }
+  }
+}
+
+.mat-list-item {
+  .routeIcon {
+    margin-right: 12px;
+  }
+}
+
+.w-100 {
+  width: 100% !important;
+}
+
+
+.text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 1;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+}
+
+
+.img-block {
+  min-height: 150px;
+  max-height: 150px;
+  min-width: 250px;
+  max-width: 250px;
+
+  img {
+    max-height: 150px;
+    max-width: 150px;
+  }
+}
+
+.img-block-lt-sm {
+  margin: 0 auto;
+}
+
+.rating-badge {
+  border-radius: 2px;
+  background: #4caf50;
+  color: white;
+  padding: 0 8px;
+}
+
+//.verified-badge {
+//  border-radius: 2px;
+//  color: #2374ec !important;
+//  background: white;
+//  font-weight: 800 !important;
+//  padding: 5px 10px;
+//}
+
+.text-lightgray {
+  color: lightgray;
+}
+
+.no-decoration {
+  text-decoration: none;
+}
+
+.text-dark {
+  color: black !important;
+}
+
+.text-light {
+  color: white !important;
+}
+
+.text-center {
+  text-align: center !important;
+}
+
+.border-rounded {
+  border: black solid 1px;
+  border-radius: 5px;
+}
+
+carousel {
+  img {
+    border-radius: 5px;
+  }
+}
+
+.no-resize {
+  resize: none !important;
+}
+
+.item {
+  width: 100%;
+  margin: 0 5px;
+  padding: 0 5px;
+}

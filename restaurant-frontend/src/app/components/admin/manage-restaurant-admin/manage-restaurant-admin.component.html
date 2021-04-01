@@ -1,0 +1,169 @@
+<section class="mt-3" fxLayout="row" fxLayoutAlign="center center">
+  <h2>Manage Restaurants</h2>
+</section>
+<section fxLayout="row wrap">
+  <section fxLayout="row" fxLayout.lt-lg="column" fxLayoutAlign="center" fxFlex="100">
+    <section fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="space-around center" fxFlex="50">
+      <mat-form-field class="item">
+        <mat-select
+          placeholder="Restaurants"
+          [(ngModel)]="selectedRestaurant"
+          name="name"
+          [disabled]="chosenOption !== ''"
+        >
+          <mat-option *ngFor="let item of restaurantList" value="{{item.id}}">
+            {{ item.name }} - {{ item.city | uppercase }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </section>
+    <section fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="space-around center" fxFlex="50">
+      <button type="submit" mat-raised-button color="accent" (click)="getRestaurantDetailsForEdit()" [disabled]="selectedRestaurant === 0">Edit Restaurant</button>
+      <button type="button" mat-raised-button color="warn" (click)="deleteRestaurant(selectedRestaurant)" [disabled]="selectedRestaurant === 0">Delete Restaurant</button>
+      <button type="button" mat-raised-button [disabled]="selectedRestaurant === 0" (click)="resetRestaurantSelection()">Reset Selection</button>
+    </section>
+  </section>
+</section>
+
+<form *ngIf="chosenOption === 'edit'" #f="ngForm" (ngSubmit)="onSubmit(f)">
+  <section fxLayout="row wrap">
+    <section fxLayout="row" fxLayout.lt-lg="column" fxLayoutAlign="center" fxFlex="100">
+      <section fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="space-around center" fxFlex="50">
+        <mat-form-field class="item">
+          <input
+            matInput
+            placeholder="Restaurant Name"
+            [(ngModel)]="name"
+            #restaurantName="ngModel"
+            name="name"
+            required
+          >
+          <mat-error *ngIf="restaurantName.hasError('required')">Restaurant cannot be blank</mat-error>
+        </mat-form-field>
+        <mat-form-field class="item">
+          <input
+            matInput
+            placeholder="Address Line 1"
+            [(ngModel)]="address1"
+            #address1Model="ngModel"
+            name="address1"
+            required
+          >
+          <mat-error *ngIf="address1Model.hasError('required')">Address Line cannot be blank</mat-error>
+        </mat-form-field>
+      </section>
+      <section fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="space-around center" fxFlex="50">
+        <mat-form-field class="item">
+          <input
+            matInput
+            placeholder="Address Line 2"
+            [(ngModel)]="address2"
+            #address2Model="ngModel"
+            name="address2"
+            required
+          >
+          <mat-error *ngIf="address2Model.hasError('required')">Address Line cannot be blank</mat-error>
+        </mat-form-field>
+        <mat-form-field class="item">
+          <input
+            type="number"
+            matInput
+            placeholder="Postal Code"
+            [(ngModel)]="pincode"
+            [pattern]="postalCodePattern"
+            #pincodeModel="ngModel"
+            name="pincode"
+            [min]="minPostalCode"
+            [max]="maxPostalCode"
+            step="1"
+            required
+          >
+          <mat-error *ngIf="pincodeModel.hasError('pattern')">Invalid Postal Code</mat-error>
+          <mat-error *ngIf="pincodeModel.hasError('required')">Postal Code required</mat-error>
+        </mat-form-field>
+      </section>
+    </section>
+    <section fxLayout="row" fxLayout.lt-lg="column" fxLayoutAlign="center" fxFlex="100">
+      <section fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="space-around center" fxFlex="50">
+        <mat-form-field class="item">
+          <mat-select
+            placeholder="City"
+            [(ngModel)]="city"
+            #cityModel="ngModel"
+            name="city"
+            required
+          >
+            <mat-option *ngFor="let item of cityList" [value]="item">
+              {{ item }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="cityModel.hasError('required')">City selection required</mat-error>
+        </mat-form-field>
+        <mat-form-field class="item">
+          <span matPrefix>+91&nbsp;</span>
+          <input placeholder="Phone Number"
+                 type="number"
+                 matInput
+                 [(ngModel)]="phone"
+                 [pattern]="mobileNumberPattern"
+                 #phoneModel="ngModel"
+                 name="phone"
+                 required
+          >
+          <mat-error *ngIf="phoneModel.hasError('pattern')">Invalid Phone Number</mat-error>
+        </mat-form-field>
+      </section>
+      <section fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="space-around center" fxFlex="50">
+        <mat-form-field class="item">
+          <span matPrefix>http://</span>
+          <input
+            type="url"
+            matInput
+            placeholder="URL"
+            [(ngModel)]="website"
+            [pattern]="urlPattern"
+            #urlModel="ngModel"
+            name="website"
+            required
+          >
+          <mat-error *ngIf="urlModel.hasError('pattern')">Invalid URL</mat-error>
+        </mat-form-field>
+        <mat-form-field class="item">
+          <input
+            type="email"
+            matInput
+            placeholder="Email ID"
+            [(ngModel)]="email"
+            email
+            #emailModel="ngModel"
+            name="email"
+            required
+          >
+          <mat-error *ngIf="emailModel.hasError('pattern')">Invalid Email ID</mat-error>
+        </mat-form-field>
+      </section>
+    </section>
+    <section fxLayout="row" fxLayout.lt-lg="column" fxLayoutAlign="center" fxFlex="100">
+      <section fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="space-around center" fxFlex="50">
+        <mat-form-field class="item">
+          <mat-select
+            placeholder="Owner"
+            [(ngModel)]="currentOwner"
+            name="owner"
+            required
+          >
+            <mat-option *ngFor="let item of ownerList" [value]="item.id">
+              {{ item.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </section>
+      <section fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="space-around center" fxFlex="50">
+        <section fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="1rem">
+          <button type="submit" mat-raised-button color="primary" [disabled]="f.invalid">Update</button>
+          <button type="button" mat-raised-button color="accent" (click)="f.resetForm()">Clear</button>
+        </section>
+      </section>
+    </section>
+  </section>
+</form>

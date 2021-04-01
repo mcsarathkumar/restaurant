@@ -1,0 +1,14 @@
+<ng-container *ngIf="!readonly">
+  <button mat-icon-button style="color: gold" class="noselect"
+          *ngFor="let ratingId of ratingArr;index as i" [id]="'star_'+i"
+          (click)="onClick(i+1)">
+    <mat-icon>
+      {{showIcon(i)}}
+    </mat-icon>
+  </button>
+</ng-container>
+
+<ng-container *ngIf="readonly">
+  <mat-icon class="noselect" style="color: gold"
+            *ngFor="let ratingId of ratingArr;index as i">{{showIcon(i)}}</mat-icon>
+</ng-container>

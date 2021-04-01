@@ -1,0 +1,33 @@
+<mat-tab-group *ngIf="restaurantList.length > 0" mat-align-tabs="center">
+  <mat-tab *ngFor="let restaurant of restaurantList; let i = index">
+    <ng-template mat-tab-label>
+      <span matBadgeColor="warn" matBadgePosition="above after" [matBadge]="restaurant.badgeCount">{{restaurant.restaurantName}}</span>
+    </ng-template>
+    <ng-container *ngFor="let item of restaurantsByPage; let i1 = index">
+<!--      <hr *ngIf="i1 !== 0">-->
+      <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutAlign="start start" class="w-100 my-2">
+        <div fxLayout="column" fxLayoutAlign="center center" class="py-3" style="min-width: 30% !important;" ngStyle.lt-sm="min-width: 100% !important;">
+          <span>{{item.commented_on | date: 'MMM d, y'}}</span>
+          <app-star-rating [rating]="item.user_rating"></app-star-rating>
+<!--          <button class="mt-2" mat-stroked-button (click)="item.showOwnerCommentsForm = true">Reply</button>-->
+        </div>
+        <div fxFlex fxLayout="column" fxLayoutAlign="start start">
+          <h3 class="mb-1"><b>{{item.commented_by}}</b></h3>
+          <span>{{item.user_comments}}</span>
+          <mat-form-field class="w-100 pt-2">
+            <textarea #commentBox placeholder="Owner Comments" name="ownerComments" type="text" matInput rows="3" class="no-resize" required></textarea>
+            <button [disabled]="commentBox?.value?.length === 0" style="font-size: x-large" mat-icon-button matSuffix (click)="saveOwnerComments(i, i1, restaurant.restaurantId, item.id, commentBox.value)">
+              <mat-icon>send</mat-icon>
+            </button>
+          </mat-form-field>
+        </div>
+      </div>
+    </ng-container>
+    <button *ngIf="restaurantList[0].actionItems.length > perPageLimit" (click)="prevPage()">Previous</button>
+    <button *ngIf="restaurantList[0].actionItems.length > perPageLimit" (click)="nextPage()">Next</button>
+  </mat-tab>
+</mat-tab-group>
+<h2 *ngIf="restaurantList.length === 0" class="m-5">
+  No pending items to reply !!
+</h2>
+

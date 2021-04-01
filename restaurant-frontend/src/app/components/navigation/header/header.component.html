@@ -1,0 +1,22 @@
+<mat-toolbar color="primary">
+  <div *ngIf="showSideNav" fxHide fxShow.lt-md>
+    <button mat-icon-button (click)="onToggleSidenav()">
+      <mat-icon>menu</mat-icon>
+    </button>
+  </div>
+  <div fxHide fxShow.gt-sm>
+    <button mat-icon-button disabled></button>
+    <button mat-icon-button disabled></button>
+  </div>
+<!--  <div><img src="assets/logo.png" style="margin-top: 10px" alt="Logo" width="50px" height="50px"></div>-->
+  <div fxFlex fxLayoutAlign="center center"><a routerLink='/home'>Find me a Restaurant !!</a></div>
+  <div>
+    <div *ngIf="!appService.userToken">
+      <a mat-button routerLink="/login">Login</a>
+      <a mat-button routerLink="/signup">Sign up</a>
+    </div>
+    <button class="text-light" *ngIf="appService.userToken" mat-button (click)="onLogout()">
+      Logout
+    </button>
+  </div>
+</mat-toolbar>

@@ -1,0 +1,78 @@
+<section class="mt-3" fxLayout="row" fxLayoutAlign="center center">
+  <h2>Manage Restaurant</h2>
+</section>
+<section fxLayout="row wrap">
+  <section fxLayout="row" fxLayout.lt-lg="column" fxLayoutAlign="center" fxFlex="100">
+    <section fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="space-around center" fxFlex="50">
+      <mat-form-field class="item">
+        <mat-select
+          placeholder="Restaurants"
+          [(ngModel)]="selectedRestaurant"
+          name="restaurant"
+        >
+          <mat-option *ngFor="let item of ownedRestaurants" value="{{item.id}}">
+            {{ item.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </section>
+    <section fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="space-around center" fxFlex="50">
+      <button type="submit" mat-raised-button color="primary" (click)="chosenOption = 'add'" [disabled]="selectedRestaurant === 0">Add Photos</button>
+      <button type="button" mat-raised-button color="accent" (click)="showPhotos()" [disabled]="selectedRestaurant === 0">Show Photos</button>
+      <button type="button" mat-raised-button [disabled]="selectedRestaurant === 0" (click)="chosenOption = '';selectedRestaurant = 0">Reset Selection</button>
+    </section>
+  </section>
+</section>
+
+<form *ngIf="chosenOption === 'add'" #f="ngForm" (ngSubmit)="onSubmit(f)">
+<section fxLayout="row wrap">
+  <section fxLayout="row" fxLayout.lt-lg="column" fxLayoutAlign="center" fxFlex="100">
+    <section fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="space-around center" fxFlex="50">
+      <input
+        hidden
+        type="file"
+        #fileInput
+        (change)="changeFileName($event)"
+        [accept]="acceptFileType"
+        required
+      >
+      <mat-form-field class="item">
+        <input type="text" matInput placeholder="File Name" disabled [value]="fileName" (click)="fileInput.click()">
+        <button matSuffix mat-icon-button color="accent" (click)="fileInput.click()" type="button" class="plus-minus">
+          <mat-icon>cloud_upload</mat-icon>
+        </button>
+      </mat-form-field>
+    </section>
+    <section fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="space-around center" fxFlex="50">
+      <button type="submit" mat-raised-button color="primary" [disabled]="(f.invalid || fileName.length < 5)">Upload</button>
+    </section>
+  </section>
+</section>
+</form>
+
+<ng-container *ngIf="chosenOption === 'show'">
+<div *ngIf="images.length > 0" class="row">
+  <mat-card class="col-5 offset-1 col-md-3 offset-md-1 my-2" *ngFor="let i of images">
+    <img mat-card-image [src]="i.imagePath" alt="Photo of a Shiba Inu">
+    <mat-card-actions fxLayout="row">
+      <button mat-icon-button (click)="deleteImage(i.id)" *ngIf="!(i.image_name === bannerImage || i.image_name === thumbnailImage)">
+        <mat-icon color="warn">delete</mat-icon>
+      </button>
+      <div fxFlex></div>
+      <button mat-icon-button [matMenuTriggerFor]="menu">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="updateImage('thumbnail', i.id)" *ngIf="!(i.image_name === bannerImage || i.image_name === thumbnailImage)">Set as Thumbnail</button>
+        <button mat-menu-item (click)="updateImage('banner', i.id)" *ngIf="!(i.image_name === bannerImage || i.image_name === thumbnailImage)">Set as Banner</button>
+        <button mat-menu-item (click)="updateImage('banner', 0)" *ngIf="i.image_name === bannerImage">Remove from Banner</button>
+        <button mat-menu-item (click)="updateImage('thumbnail', 0)" *ngIf="i.image_name === thumbnailImage">Remove from Thumbnail</button>
+      </mat-menu>
+    </mat-card-actions>
+  </mat-card>
+</div>
+<h1 *ngIf="images.length === 0">
+  No Photos to show
+</h1>
+</ng-container>
+<div class="py-0 py-md-5"></div>

@@ -1,0 +1,94 @@
+<div class="mt-5" style="overflow-y: auto"></div>
+<section class="centered mt-4 card-wrapper">
+  <mat-card class="mat-elevation-z1">
+    <mat-card-title class="my-2 text-center">Member Signup</mat-card-title>
+    <mat-card-content>
+      <!--<form #f="ngForm" (ngSubmit)="f.valid && onSubmit(f)">-->
+      <form #f="ngForm" (ngSubmit)="onSubmit(f)">
+        <section fxLayout="column" fxLayoutAlign="center center" >
+          <mat-form-field appearance="outline">
+            <mat-label>Firstname</mat-label>
+            <input type="text"
+                   matInput
+                   placeholder="Firstname"
+                   ngModel
+                   name="firstname"
+                   required
+                   #firstnameInput="ngModel"
+                   autofocus
+            >
+            <mat-error *ngIf="firstnameInput.hasError('required')">First Name Missing</mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Lastname</mat-label>
+            <input type="text"
+                   matInput
+                   placeholder="Lastname"
+                   ngModel
+                   name="lastname"
+                   required
+                   #lastnameInput="ngModel"
+            >
+            <mat-error *ngIf="lastnameInput.hasError('required')">Last Name Missing</mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Email</mat-label>
+            <input type="text"
+                   matInput
+                   placeholder="Email"
+                   [(ngModel)]="email"
+                   email
+                   name="email"
+                   required
+                   #userInput="ngModel"
+                   (change)="preValidateEmail(userInput.value)"
+            >
+            <mat-error *ngIf="userInput.hasError('required')">E-Mail ID Missing</mat-error>
+            <mat-error *ngIf="!userInput.hasError('required')">Invalid E-Mail</mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Password</mat-label>
+            <input [type]="hide ? 'password' : 'text'"
+                   matInput
+                   placeholder="Password"
+                   ngModel
+                   name="password"
+                   required
+                   minlength="4"
+                   #pwInput="ngModel">
+            <mat-icon style="cursor: pointer" matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+            <mat-error *ngIf="pwInput.hasError('required')">Missing Password</mat-error>
+            <mat-error *ngIf="(pwInput.value?.length > 0 && pwInput.value?.length < 4)">Has to be at least 4 characters long</mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Phone/Mobile</mat-label>
+            <input type="text"
+                   matInput
+                   placeholder="9876 543 210"
+                   [(ngModel)]="phoneNo"
+                   name="phone"
+                   required
+                   #phoneInput="ngModel"
+                   pattern="^[6789]\d{9}$"
+            >
+            <mat-error *ngIf="phoneInput.hasError('required')">Phone Missing</mat-error>
+            <mat-error *ngIf="phoneInput.hasError('pattern')">Enter Valid phone number</mat-error>
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>User Type</mat-label>
+            <mat-select name="usertype" ngModel #userType="ngModel" required>
+              <mat-option value="customer">Customer</mat-option>
+              <mat-option value="owner">Owner</mat-option>
+            </mat-select>
+            <mat-error *ngIf="userType.hasError('required')">User type Missing</mat-error>
+          </mat-form-field>
+        </section>
+        <section fxLayout="row" fxLayoutAlign="space-evenly center" style="margin-top: 10px;">
+          <button type="submit" mat-raised-button color="primary" [disabled]="f.invalid">Signup</button>
+          <button type="button" mat-raised-button color="accent" (click)="router.navigate(['login'])">Login</button>
+          <!--      <button type="button" mat-raised-button color="warn" (click)="forgot_password(userInput?.value)">Forgot Password</button>-->
+        </section>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</section>

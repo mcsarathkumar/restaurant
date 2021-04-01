@@ -1,0 +1,160 @@
+<ng-container *ngIf="isValidRestaurant; else: incorrectRestaurant">
+  <div #cover class="banner-image"
+       style='background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url("{{restaurantDetails.banner_image}}") no-repeat;'>
+    <div fxLayout="column" fxLayoutAlign="space-evenly start" class="p-3">
+      <h1 class="pt-3">{{restaurantDetails.name}}
+        <mat-icon color="primary">check_circle</mat-icon>
+      </h1>
+      <div *ngIf="restaurantDetails.user_rating > 0" fxLayout="row" fxLayoutAlign="start center">
+        <div fxLayout="column" class="mr-2 rating-badge">{{restaurantDetails.user_rating}}</div>
+        <app-star-rating class="mt-1" [rating]="restaurantDetails.user_rating"></app-star-rating>
+      </div>
+      <div *ngIf="restaurantDetails.user_rating === 0" fxLayout="row" class="pt-1 pb-1">
+        <div>No Rating Available</div>
+      </div>
+      <div fxLayout="row" class="pt-3">
+        <mat-icon class="mr-2 text-lightgray">directions</mat-icon>
+        <div>{{restaurantDetails.address1}}, {{restaurantDetails.address2}}, {{restaurantDetails.city}}
+          - {{restaurantDetails.pincode}}</div>
+      </div>
+      <div fxLayout="row" class="pt-3">
+        <mat-icon class="mr-2 text-lightgray">phone</mat-icon>
+        <div><a class="text-light no-decoration"
+                [href]="'tel:'++restaurantDetails.phone">{{restaurantDetails.phone}}</a></div>
+      </div>
+      <div class="w-100 mt-4 action-item" fxLayout="row" fxLayoutAlign="space-around center">
+        <a class="no-decoration" [href]="'mailto:' + restaurantDetails.email" fxLayout="column"
+           fxLayoutAlign="space-around center">
+          <mat-icon style="font-size: 36px" class="ml-n2 mb-3">alternate_email</mat-icon>
+          <div>Email</div>
+        </a>
+        <a class="no-decoration" [href]="'http://'+restaurantDetails.website" fxLayout="column"
+           fxLayoutAlign="space-around center" target="_blank">
+          <mat-icon style="font-size: 36px" class="ml-n2 mb-3">language</mat-icon>
+          <div>Website</div>
+        </a>
+        <a class="no-decoration" [href]="'tel:'++restaurantDetails.phone" fxLayout="column"
+           fxLayoutAlign="space-around center">
+          <mat-icon style="font-size: 36px" class="ml-n2 mb-3">call</mat-icon>
+          <div>Phone</div>
+        </a>
+        <div *ngIf="!isAdmin" fxLayout="column" fxLayoutAlign="space-around center" style="cursor: pointer" (click)="openReviewForm()">
+          <mat-icon style="font-size: 36px" class="ml-n2 mb-3">rate_review</mat-icon>
+          <div>Write Review</div>
+        </div>
+        <div fxLayout="column" fxLayoutAlign="space-around center" style="cursor: pointer" (click)="copyURL()">
+          <mat-icon style="font-size: 36px" class="ml-n2 mb-3">share</mat-icon>
+          <div>Share</div>
+        </div>
+        <a class="no-decoration" [href]="whatsappHref" fxLayout="column" fxLayoutAlign="space-around center">
+          <img src="/assets/whatsapp.png" alt="Whatsapp" height="36px" width="36px">
+          <div class="pt-1">Whatsappp</div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <carousel class="mt-3" [images]="carouselImages"></carousel>
+
+  <div *ngIf="restaurantDetails.user_rating > 0" class="mt-3" fxLayout="row" fxLayoutAlign="space-around center"
+       fxLayout.lt-sm="column"
+       fxLayoutAlign.lt-sm="center center" fxLayoutGap="1rem" fxLayoutGap.lt-sm="0rem">
+    <mat-card fxLayout="column" fxLayoutAlign="start start" class="w-100">
+      <mat-card-content>
+        <h2 class="mb-2">Highest Rating</h2>
+        <div fxLayout="row" fxLayoutAlign="space-between center">
+          <div fxLayout="row" fxLayoutAlign="start center">
+            <app-star-rating class="mt-1" [rating]="highestRating.user_rating"></app-star-rating>
+          </div>
+        </div>
+        <div>{{highestRating.user_comments}}</div>
+        <div>
+          <span>- By {{highestRating.user_name}} on {{highestRating.commented_on | date: 'MMM d, y'}}</span>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <mat-card fxLayout="column" fxLayoutAlign="start start" class="w-100" ngClass.lt-sm="mt-3">
+      <mat-card-content>
+        <h2 class="mb-2">Lowest Rating</h2>
+        <div fxLayout="row" fxLayoutAlign="space-between center">
+          <div fxLayout="row" fxLayoutAlign="start center">
+            <app-star-rating class="mt-1" [rating]="lowestRating.user_rating"></app-star-rating>
+          </div>
+        </div>
+        <div>{{lowestRating.user_comments}}</div>
+        <div>
+          <span>- By {{lowestRating.user_name}} on {{lowestRating.commented_on | date: 'MMM d, y'}}</span>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <form *ngIf="isCustomer" #reviewForm="ngForm" (ngSubmit)="reviewFormSubmit(reviewForm)">
+    <mat-accordion>
+      <mat-expansion-panel class="mt-3" [expanded]="step">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Share your experience in this Restaurant
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <app-star-rating [readonly]="false" [rating]="userRating"
+                         (ratingUpdated)="captureRating($event)"></app-star-rating>
+        <br>
+        <mat-form-field class="w-100">
+          <textarea #commentBox placeholder="Comments" name="reviewComments" ngModel type="text" matInput rows="3"
+                    class="no-resize" required></textarea>
+        </mat-form-field>
+
+        <mat-action-row>
+          <button mat-button color="warn" (click)="discardReview(reviewForm)" type="button">Cancel</button>
+          <button mat-button color="primary" [disabled]="reviewForm.invalid" type="submit">Submit</button>
+        </mat-action-row>
+      </mat-expansion-panel>
+
+    </mat-accordion>
+  </form>
+
+  <div *ngIf="restaurantDetails.user_rating > 0">
+
+    <div class="mt-3 mb-2 pt-2" fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="1rem"
+         fxLayoutAlign.lt-sm="center stretch">
+      <button *ngFor="let option of reviewFilterOptions; let i = index" mat-flat-button
+              [color]="activeFilter === i ? 'primary' : ''" [ngClass]="activeFilter === i ? 'text-light' : 'text-dark'"
+              (click)="reviewFilterFn(option.buttonValue, i)">{{option.buttonDisplay}}</button>
+    </div>
+    <ng-container *ngFor="let item of restaurantReviews; let i = index">
+      <hr *ngIf="i !== 0">
+      <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutAlign="start start" class="w-100 my-2">
+        <div fxLayout="column" fxLayoutAlign="center center" class="py-3" style="min-width: 30% !important;"
+             ngStyle.lt-sm="min-width: 100% !important;">
+          <span>{{item.commented_on | date: 'MMM d, y'}}</span>
+          <app-star-rating [rating]="item.user_rating"></app-star-rating>
+        </div>
+        <div fxFlex fxLayout="column" fxLayoutAlign="start start">
+          <h3 class="mb-1"><b>{{item.user_name}}</b></h3>
+          <span>{{item.user_comments}}</span>
+          <div class="ml-5" *ngIf="item.owner_comments && item.owner_comments.length > 0">
+            <h3 class="mb-1"><b>Owner</b></h3>
+            <span>{{item.owner_comments}}</span>
+          </div>
+        </div>
+        <div *ngIf="isAdmin" fxLayout="column" fxLayoutAlign="start start">
+          <button mat-icon-button [matMenuTriggerFor]="menu">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="editReview(item)">Edit</button>
+            <button mat-menu-item (click)="deleteReview(item.id)">Delete</button>
+          </mat-menu>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+
+  <div class="py-0 py-md-5"></div>
+</ng-container>
+<ng-template #incorrectRestaurant>
+  <div class="mt-5" *ngIf="countdownTimer">
+    Incorrect Restaurant... You will be navigated to home page in {{countdownTimer}} seconds
+  </div>
+</ng-template>

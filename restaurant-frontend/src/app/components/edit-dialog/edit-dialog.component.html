@@ -1,0 +1,21 @@
+<h2 mat-dialog-title>Edit Review Comments</h2>
+<mat-dialog-content class="mat-typography">
+  <div fxLayout="column" fxLayoutAlign="space-around center">
+    <app-star-rating [readonly]="false" [rating]="data.user_rating"
+                     (ratingUpdated)="captureRating($event)"></app-star-rating>
+    <mat-form-field class="w-100">
+          <textarea #commentBox placeholder="User Comments" name="userReviewComments" [(ngModel)]="data.user_comments"
+                    type="text" matInput rows="3"
+                    class="no-resize" required></textarea>
+    </mat-form-field>
+    <mat-form-field class="w-100">
+          <textarea #ownerCmmentBox placeholder="Owner Comments" name="ownerReviewComments"
+                    [(ngModel)]="data.owner_comments" type="text" matInput rows="3"
+                    class="no-resize" required></textarea>
+    </mat-form-field>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close cdkFocusInitial>Discard</button>
+  <button mat-button [mat-dialog-close]="data">Update</button>
+</mat-dialog-actions>

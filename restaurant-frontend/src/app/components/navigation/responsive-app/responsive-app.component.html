@@ -1,0 +1,13 @@
+<mat-sidenav-container>
+  <mat-sidenav *ngIf="showSideNav" #sidenav role="navigation">
+    <mat-nav-list>
+      <app-sidenav-list *ngFor="let item of navItems" [item]="item"></app-sidenav-list>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content #matSidenavContent>
+    <app-header [showSideNav]="showSideNav"></app-header>
+    <main *ngIf="media.isActive('lt-md')">
+      <router-outlet></router-outlet>
+    </main>
+  </mat-sidenav-content>
+</mat-sidenav-container>
